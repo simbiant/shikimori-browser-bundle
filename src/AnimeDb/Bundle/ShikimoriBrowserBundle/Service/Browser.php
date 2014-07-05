@@ -54,28 +54,17 @@ class Browser
     /**
      * Construct
      *
+     * @param \Guzzle\Http\Client $client
      * @param string $host
      * @param string $api_host
      * @param string $api_prefix
      */
-    public function __construct($host, $api_host, $api_prefix)
+    public function __construct(Client $client, $host, $api_host, $api_prefix)
     {
+        $this->client = $client;
         $this->host = $host;
         $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
-    }
-
-    /**
-     * Get HTTP client
-     *
-     * @param \Guzzle\Http\Client
-     */
-    protected function getClient()
-    {
-        if (!($this->client instanceof Client)) {
-            $this->client = new Client($this->api_host);
-        }
-        return $this->client;
     }
 
     /**
@@ -108,7 +97,7 @@ class Browser
     public function get($path)
     {
         /* @var $response \Guzzle\Http\Message\Response */
-        $response = $this->getClient()->get($this->api_prefix.$path)->send();
+        $response = $this->client->get($this->api_prefix.$path)->send();
         if ($response->isError()) {
             throw new \RuntimeException('Failed to query the server '.$this->api_host);
         }
