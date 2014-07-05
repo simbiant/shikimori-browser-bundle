@@ -31,13 +31,6 @@ class Browser
     private $host;
 
     /**
-     * API host
-     *
-     * @var string
-     */
-    private $api_host;
-
-    /**
      * API path prefix
      *
      * @var string
@@ -56,14 +49,12 @@ class Browser
      *
      * @param \Guzzle\Http\Client $client
      * @param string $host
-     * @param string $api_host
      * @param string $api_prefix
      */
-    public function __construct(Client $client, $host, $api_host, $api_prefix)
+    public function __construct(Client $client, $host, $api_prefix)
     {
         $this->client = $client;
         $this->host = $host;
-        $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
     }
 
@@ -84,7 +75,7 @@ class Browser
      */
     public function getApiHost()
     {
-        return $this->api_host;
+        return $this->client->getBaseUrl();
     }
 
     /**
@@ -92,18 +83,18 @@ class Browser
      *
      * @param string $path
      *
-     * @return mixed
+     * @return array
      */
     public function get($path)
     {
         /* @var $response \Guzzle\Http\Message\Response */
         $response = $this->client->get($this->api_prefix.$path)->send();
         if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.$this->api_host);
+            throw new \RuntimeException('Failed to query the server '.$this->client->getBaseUrl());
         }
         $body = @json_decode($response->getBody(true), true);
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw new \RuntimeException('Invalid response from the server '.$this->api_host);
+            throw new \RuntimeException('Invalid response from the server '.$this->client->getBaseUrl());
         }
         return $body;
     }
