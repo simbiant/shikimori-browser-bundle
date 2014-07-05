@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/anime-db/shikimori-browser-bundle.png)](https://travis-ci.org/anime-db/shikimori-browser-bundle)
 [![Total Downloads](https://poser.pugx.org/anime-db/shikimori-browser-bundle/downloads.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
 [![License](https://poser.pugx.org/anime-db/shikimori-browser-bundle/license.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
+[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/?branch=master)
 
 shikimori-browser-bundle
 ========================

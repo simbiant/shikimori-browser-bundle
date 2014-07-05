@@ -6,10 +6,16 @@
     "homepage": "http://github.com/anime-db/shikimori-browser-bundle",
     "version": "0.1.0",
     "autoload": {
-        "psr-0": { "AnimeDb\\Bundle\\ShikimoriBrowserBundle": "src/" }
+        "psr-4": {
+            "AnimeDb\\Bundle\\ShikimoriBrowserBundle\\": "src/",
+            "AnimeDb\\Bundle\\ShikimoriBrowserBundle\\Tests\\": "tests/"
+        }
     },
     "require": {
         "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "guzzle/guzzle": "3.9.*"
     },
     "minimum-stability": "dev"
 }
