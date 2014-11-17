@@ -10,7 +10,6 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use Symfony\Component\HttpFoundation\Request;
 use Guzzle\Http\Client;
 
 /**
