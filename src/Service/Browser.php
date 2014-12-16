@@ -10,7 +10,6 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use Symfony\Component\HttpFoundation\Request;
 use Guzzle\Http\Client;
 
 /**
@@ -92,7 +91,7 @@ class Browser
         if ($response->isError()) {
             throw new \RuntimeException('Failed to query the server '.$this->client->getBaseUrl());
         }
-        $body = @json_decode($response->getBody(true), true);
+        $body = json_decode($response->getBody(true), true);
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
             throw new \RuntimeException('Invalid response from the server '.$this->client->getBaseUrl());
         }
