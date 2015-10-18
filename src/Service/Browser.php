@@ -78,6 +78,32 @@ class Browser
     }
 
     /**
+     * Set timeout
+     *
+     * @param integer $timeout
+     *
+     * @return \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     */
+    public function setTimeout($timeout)
+    {
+        $this->client->setDefaultOption('timeout', $timeout);
+        return $this;
+    }
+
+    /**
+     * Set proxy
+     *
+     * @param integer $proxy
+     *
+     * @return \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
+     */
+    public function setProxy($proxy)
+    {
+        $this->client->setDefaultOption('proxy', $proxy);
+        return $this;
+    }
+
+    /**
      * Get data from path
      *
      * @param string $path
