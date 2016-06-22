@@ -69,6 +69,7 @@ class Browser
     public function setTimeout($timeout)
     {
         $this->client->setDefaultOption('timeout', $timeout);
+
         return $this;
     }
 
@@ -80,6 +81,7 @@ class Browser
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
+
         return $this;
     }
 

@@ -1,8 +1,5 @@
 preset: symfony
 
-enabled:
-  - short_array_syntax
-
 disabled:
   - phpdoc_align
   - simplified_null_return

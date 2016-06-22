@@ -12,7 +12,7 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\DependencyInjection\AnimeDbShikimoriBr
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Test DependencyInjection
+ * Test DependencyInjection.
  */
 class AnimeDbShikimoriBrowserExtensionTest extends \PHPUnit_Framework_TestCase
 {
