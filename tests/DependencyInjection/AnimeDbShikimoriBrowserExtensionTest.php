@@ -22,6 +22,6 @@ class AnimeDbShikimoriBrowserExtensionTest extends \PHPUnit_Framework_TestCase
         $builder = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
 
         $di = new AnimeDbShikimoriBrowserExtension();
-        $di->load(array(), $builder);
+        $di->load([], $builder);
     }
 }

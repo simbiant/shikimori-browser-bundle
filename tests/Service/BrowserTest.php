@@ -105,7 +105,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $data = array('test' => 123);
+        $data = ['test' => 123];
         $this->buildDialogue('baz', false, $data);
         $this->assertEquals($data, $this->browser->get('baz'));
     }
