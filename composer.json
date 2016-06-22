@@ -16,13 +16,12 @@
 	},
 	"require" : {
 		"php" : ">=5.3.3",
-		"guzzle/guzzle" : "3.9.*"
+		"guzzle/guzzle" : "6.2.*"
 	},
 	"require-dev" : {
 		"symfony/dependency-injection" : ">=2.3.17",
 		"symfony/expression-language" : ">=2.3.17",
 		"symfony/config" : ">=2.3.17",
 		"symfony/http-kernel" : ">=2.3.17"
-	},
-	"minimum-stability" : "dev"
+	}
 }
