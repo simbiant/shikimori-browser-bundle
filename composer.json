@@ -1,27 +1,27 @@
 {
-	"name" : "anime-db/shikimori-browser-bundle",
-	"license" : "GPL-3.0",
-	"type" : "library",
-	"description" : "Plugin Shikimori for the catalog Anime DB",
-	"homepage" : "http://github.com/anime-db/shikimori-browser-bundle",
-	"autoload" : {
-		"psr-4" : {
-			"AnimeDb\\Bundle\\ShikimoriBrowserBundle\\" : "src/"
-		}
-	},
-	"autoload-dev" : {
-		"psr-4" : {
-			"AnimeDb\\Bundle\\ShikimoriBrowserBundle\\Tests\\" : "tests/"
-		}
-	},
-	"require" : {
-		"php" : ">=5.3.3",
-		"guzzle/guzzle" : "3.9.*"
-	},
-	"require-dev" : {
-		"symfony/dependency-injection" : ">=2.3.17",
-		"symfony/expression-language" : ">=2.3.17",
-		"symfony/config" : ">=2.3.17",
-		"symfony/http-kernel" : ">=2.3.17"
-	}
+    "name": "anime-db/shikimori-browser-bundle",
+    "license": "GPL-3.0",
+    "type": "library",
+    "description": "Plugin Shikimori for the catalog Anime DB",
+    "homepage": "http://github.com/anime-db/shikimori-browser-bundle",
+    "autoload": {
+        "psr-4": {
+            "AnimeDb\\Bundle\\ShikimoriBrowserBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AnimeDb\\Bundle\\ShikimoriBrowserBundle\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "guzzle/guzzle": "~3.9"
+    },
+    "require-dev": {
+        "symfony/dependency-injection": "~2.3|~3.0",
+        "symfony/expression-language": "~2.3|~3.0",
+        "symfony/config": "~2.3|~3.0",
+        "symfony/http-kernel": "~2.3|~3.0"
+    }
 }
