@@ -10,8 +10,7 @@ notifications:
     email: dev@anime-db.org
 
 before_script:
-    - composer self-update
-    - composer install --dev
+    - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
 script:
     - vendor/bin/phpunit --coverage-clover build/coverage-clover.xml
