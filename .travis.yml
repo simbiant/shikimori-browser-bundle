@@ -9,6 +9,10 @@ php:
 notifications:
     email: dev@anime-db.org
 
+branches:
+  except:
+    - /^analysis-.*$/
+
 before_script:
     - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
