@@ -15,6 +15,14 @@ branches:
   except:
     - /^analysis-.*$/
 
+matrix:
+    fast_finish: true
+    include:
+        - php: hhvm
+          sudo: required
+          dist: trusty
+          group: edge
+
 before_script:
     - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
