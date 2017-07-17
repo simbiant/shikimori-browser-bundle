@@ -23,6 +23,9 @@ matrix:
           dist: trusty
           group: edge
 
+before_install:
+    - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
+
 before_script:
     - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
