@@ -80,7 +80,7 @@ class Browser
      */
     public function get($path)
     {
-        $response = $this->client->request('GET', $this->api_prefix.$path);
+        $response = $this->client->request('GET', $this->api_host.$this->api_prefix.$path);
 
         if ($response->isError()) {
             throw ResponseException::failed($this->api_host);
