@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ResponseException;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException;
 use GuzzleHttp\Client;
 
 /**
