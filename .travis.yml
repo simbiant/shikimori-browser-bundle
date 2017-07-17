@@ -18,6 +18,12 @@ branches:
 matrix:
     fast_finish: true
     include:
+        - php: 5.5
+          env: SYMFONY_VERSION=2.7.*
+        - php: 5.5
+          env: SYMFONY_VERSION=2.8.*
+        - php: 5.5
+          env: SYMFONY_VERSION=3.0.*
         - php: hhvm
           sudo: required
           dist: trusty
@@ -28,6 +34,7 @@ before_install:
     - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 before_script:
+    - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --dev --no-update; fi;
     - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
 script:
