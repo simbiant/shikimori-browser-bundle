@@ -40,7 +40,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->client = $this
-            ->getMockBuilder('\Guzzle\Http\Client')
+            ->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -122,7 +122,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         /* @var $response \PHPUnit_Framework_MockObject_MockObject|Response */
         $response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->getMockBuilder(Response::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -133,7 +133,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         ;
 
         /* @var $request \PHPUnit_Framework_MockObject_MockObject|RequestInterface */
-        $request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
+        $request = $this->getMock(RequestInterface::class);
         $request
             ->expects($this->once())
             ->method('send')
@@ -152,7 +152,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->once())
                 ->method('getBody')
                 ->with(true)
-                ->will($this->returnValue($data ? json_encode($data) : $data));
+                ->will($this->returnValue($data ? json_encode($data) : $data))
+            ;
         }
     }
 }
