@@ -1,4 +1,4 @@
-<img src="http://anime-db.org/bundles/animedboffsite/images/shikimori.org.png" /><br />
+[![Shikimori](http://anime-db.org/bundles/animedboffsite/images/shikimori.org.png)](https://shikimori.org)
 
 [![Latest Stable Version](https://poser.pugx.org/anime-db/shikimori-browser-bundle/v/stable.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/anime-db/shikimori-browser-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
@@ -11,7 +11,17 @@
 [![Dependency Status](https://www.versioneye.com/user/projects/5746f648ce8d0e004130cad7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5746f648ce8d0e004130cad7)
 [![License](https://poser.pugx.org/anime-db/shikimori-browser-bundle/license.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
 
-shikimori-browser-bundle
-========================
-
 Shikimori.org API browser
+=========================
+
+## Installation
+
+Pretty simple with [Composer](http://packagist.org), run:
+
+```sh
+composer anime-db/shikimori-browser-bundle
+```
+
+## License
+
+This bundle is under the [MIT license](http://opensource.org/licenses/MIT). See the complete license in the file: LICENSE
