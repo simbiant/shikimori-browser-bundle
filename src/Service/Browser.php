@@ -10,7 +10,8 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use Guzzle\Http\Client;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ResponseException;
+use GuzzleHttp\Client;
 
 /**
  * Browser.
@@ -28,6 +29,11 @@ class Browser
     /**
      * @var string
      */
+    private $api_host;
+
+    /**
+     * @var string
+     */
     private $api_prefix;
 
     /**
@@ -38,12 +44,14 @@ class Browser
     /**
      * @param Client $client
      * @param string $host
+     * @param string $api_host
      * @param string $api_prefix
      */
-    public function __construct(Client $client, $host, $api_prefix)
+    public function __construct(Client $client, $host, $api_host, $api_prefix)
     {
         $this->client = $client;
         $this->host = $host;
+        $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
     }
 
@@ -60,31 +68,7 @@ class Browser
      */
     public function getApiHost()
     {
-        return $this->client->getBaseUrl();
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return Browser
-     */
-    public function setTimeout($timeout)
-    {
-        $this->client->setDefaultOption('timeout', $timeout);
-
-        return $this;
-    }
-
-    /**
-     * @param int $proxy
-     *
-     * @return Browser
-     */
-    public function setProxy($proxy)
-    {
-        $this->client->setDefaultOption('proxy', $proxy);
-
-        return $this;
+        return $this->api_host;
     }
 
     /**
@@ -96,16 +80,16 @@ class Browser
      */
     public function get($path)
     {
-        $response = $this->client->get($this->api_prefix.$path)->send();
+        $response = $this->client->request('GET', $this->api_prefix.$path);
 
         if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.$this->client->getBaseUrl());
+            throw ResponseException::failed($this->api_host);
         }
 
-        $body = json_decode($response->getBody(true), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw new \RuntimeException('Invalid response from the server '.$this->client->getBaseUrl());
+            throw ResponseException::invalidResponse($this->api_host);
         }
 
         return $body;

@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.4",
-        "guzzle/guzzle": "~3.9"
+        "guzzlehttp/guzzle" : "~6.3"
     },
     "require-dev": {
         "symfony/dependency-injection": "~2.7|~3.0",

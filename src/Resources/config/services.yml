@@ -4,9 +4,9 @@ services:
         arguments:
             - '@anime_db.shikimori.browser.client'
             - '%anime_db.shikimori.host%'
+            - '%anime_db.shikimori.api.host%'
             - '%anime_db.shikimori.api.prefix%'
 
     anime_db.shikimori.browser.client:
-        class: Guzzle\Http\Client
-        arguments: [ '%anime_db.shikimori.api.host%' ]
+        class: GuzzleHttp\Client
         public: false
