@@ -11,9 +11,9 @@
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\RequestInterface;
+use GuzzleHttp\Client;
 use Guzzle\Http\Message\Response;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $api_prefix = 'bar';
+    private $api_host = 'bar';
+
+    /**
+     * @var string
+     */
+    private $api_prefix = 'baz';
 
     /**
      * @var Browser
@@ -45,7 +50,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
-        $this->browser = new Browser($this->client, $this->host, $this->api_prefix);
+        $this->browser = new Browser($this->client, $this->host, $this->api_host, $this->api_prefix);
     }
 
     public function testGetHost()
@@ -55,37 +60,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     public function testGetApiHost()
     {
-        $this->client
-            ->expects($this->once())
-            ->method('getBaseUrl')
-            ->will($this->returnValue('baz'))
-        ;
-
-        $this->assertEquals('baz', $this->browser->getApiHost());
-    }
-
-    public function testSetTimeout()
-    {
-        $timeout = 123;
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('timeout', $timeout)
-        ;
-
-        $this->assertEquals($this->browser, $this->browser->setTimeout($timeout));
-    }
-
-    public function testSetProxy()
-    {
-        $proxy = '127.0.0.1';
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('proxy', $proxy)
-        ;
-
-        $this->assertEquals($this->browser, $this->browser->setProxy($proxy));
+        $this->assertEquals($this->api_host, $this->browser->getApiHost());
     }
 
     /**
@@ -120,6 +95,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildDialogue($path, $is_error, $data = null)
     {
+        $body = $this->getMock(StreamInterface::class);
+        $body
+            ->expects($is_error ? $this->never() : $this->once())
+            ->method('getContents')
+            ->will($this->returnValue($data ? json_encode($data) : $data))
+        ;
+
         /* @var $response \PHPUnit_Framework_MockObject_MockObject|Response */
         $response = $this
             ->getMockBuilder(Response::class)
@@ -132,27 +114,18 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($is_error))
         ;
 
-        /* @var $request \PHPUnit_Framework_MockObject_MockObject|RequestInterface */
-        $request = $this->getMock(RequestInterface::class);
-        $request
-            ->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response))
-        ;
-
         $this->client
             ->expects($this->once())
-            ->method('get')
-            ->with($this->api_prefix.$path)
-            ->will($this->returnValue($request))
+            ->method('request')
+            ->with('GET', $this->api_host.$this->api_prefix.$path)
+            ->will($this->returnValue($response))
         ;
 
         if (!$is_error) {
             $response
                 ->expects($this->once())
                 ->method('getBody')
-                ->with(true)
-                ->will($this->returnValue($data ? json_encode($data) : $data))
+                ->will($this->returnValue($body))
             ;
         }
     }
