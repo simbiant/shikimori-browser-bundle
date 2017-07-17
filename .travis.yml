@@ -14,8 +14,8 @@ before_script:
     - composer install --dev
 
 script:
-    - phpunit --verbose --coverage-clover=coverage.clover
+    - vendor/bin/phpunit --coverage-clover build/coverage-clover.xml
 
 after_script:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+    - vendor/bin/ocular code-coverage:upload --format=php-clover build/coverage-clover.xml
+    - vendor/bin/coveralls -v -c .coveralls.yml
