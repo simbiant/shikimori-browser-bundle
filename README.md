@@ -1,15 +1,13 @@
 [![Shikimori](http://anime-db.org/bundles/animedboffsite/images/shikimori.org.png)](https://shikimori.org)
 
-[![Latest Stable Version](https://poser.pugx.org/anime-db/shikimori-browser-bundle/v/stable.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
-[![Latest Unstable Version](https://poser.pugx.org/anime-db/shikimori-browser-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
-[![Total Downloads](https://poser.pugx.org/anime-db/shikimori-browser-bundle/downloads)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
-[![Build Status](https://travis-ci.org/anime-db/shikimori-browser-bundle.png)](https://travis-ci.org/anime-db/shikimori-browser-bundle)
-[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/fde73716-6558-46ff-b3a9-f2f989a59d0c/mini.png)](https://insight.sensiolabs.com/projects/fde73716-6558-46ff-b3a9-f2f989a59d0c)
-[![StyleCI](https://styleci.io/repos/18437335/shield)](https://styleci.io/repos/18437335)
-[![Dependency Status](https://www.versioneye.com/user/projects/5746f648ce8d0e004130cad7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5746f648ce8d0e004130cad7)
-[![License](https://poser.pugx.org/anime-db/shikimori-browser-bundle/license.png)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
+[![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/shikimori-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/anime-db/shikimori-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/shikimori-browser-bundle)
+[![Build Status](https://img.shields.io/travis/anime-db/shikimori-browser-bundle.svg?maxAge=3600)](https://travis-ci.org/anime-db/shikimori-browser-bundle)
+[![Coverage Status](https://img.shields.io/coveralls/anime-db/shikimori-browser-bundle.svg?maxAge=3600)](https://coveralls.io/github/anime-db/shikimori-browser-bundle?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/anime-db/shikimori-browser-bundle.svg?maxAge=3600)](https://scrutinizer-ci.com/g/anime-db/shikimori-browser-bundle/?branch=master)
+[![SensioLabs Insight](https://img.shields.io/sensiolabs/i/fde73716-6558-46ff-b3a9-f2f989a59d0c.svg?maxAge=3600&label=SLInsight)](https://insight.sensiolabs.com/projects/fde73716-6558-46ff-b3a9-f2f989a59d0c)
+[![StyleCI](https://styleci.io/repos/18437335/shield?branch=master)](https://styleci.io/repos/18437335)
+[![License](https://img.shields.io/packagist/l/anime-db/shikimori-browser-bundle.svg?maxAge=3600)](https://github.com/anime-db/shikimori-browser-bundle)
 
 Shikimori.org API browser
 =========================
