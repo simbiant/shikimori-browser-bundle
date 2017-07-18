@@ -37,6 +37,46 @@ anime_db_shikimori_browser:
     prefix: '/api/'
 ```
 
+Usage
+-----
+
+First get browser
+
+```php
+$browser = $this->get('anime_db.shikimori.browser');
+```
+
+List animes ([docs](https://shikimori.org/api/doc/1.0/animes/index))
+
+```php
+$animes = $browser->get('animes', ['limit' => 10]);
+```
+
+Mark all messages as read ([docs](https://shikimori.org/api/doc/1.0/messages/read_all))
+
+```php
+$response = $browser->post('messages/read_all');
+```
+
+Update a message ([docs](https://shikimori.org/api/doc/1.0/messages/update))
+
+```php
+$response = $browser->patch('messages/12', [
+    "message" => [
+        "body": "blablabla",
+    ],
+]);
+```
+
+Update a comment ([docs](https://shikimori.org/api/doc/1.0/comments/update))
+
+```php
+$response = $browser->put('comments/8', [
+    "message" => [
+        "body": "blablabla",
+    ],
+]);
+```
 
 Destroy a message ([docs](https://shikimori.org/api/doc/1.0/messages/destroy))
 
