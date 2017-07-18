@@ -131,7 +131,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->buildDialogue($method, 'baz', false, [], $options);
 
-
         switch ($method) {
             case 'GET':
                 $this->browser->get('baz', $options);
