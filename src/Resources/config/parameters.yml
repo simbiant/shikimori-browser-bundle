@@ -1,3 +1,0 @@
-parameters:
-    anime_db.shikimori.host: 'https://shikimori.org'
-    anime_db.shikimori.prefix: '/api'

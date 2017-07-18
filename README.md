@@ -12,6 +12,8 @@
 Shikimori.org API browser
 =========================
 
+Read API documentation here: http://shikimori.org/api/doc
+
 Installation
 ------------
 
@@ -21,10 +23,26 @@ Pretty simple with [Composer](http://packagist.org), run:
 composer anime-db/shikimori-browser-bundle
 ```
 
-API docs
---------
+Configuration
+-------------
 
-Read documentation here: http://shikimori.org/api/doc
+```yml
+anime_db_shikimori_browser:
+    # API host
+    # As a default used 'https://shikimori.org'
+    host: 'https://shikimori.org'
+
+    # Prefix for API resurces
+    # As a default used '/api/'
+    prefix: '/api/'
+```
+
+
+Destroy a message ([docs](https://shikimori.org/api/doc/1.0/messages/destroy))
+
+```php
+$browser->delete('messages/12');
+```
 
 License
 -------

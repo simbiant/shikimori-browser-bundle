@@ -1,10 +1,7 @@
 services:
     anime_db.shikimori.browser:
         class: AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
-        arguments:
-            - '@anime_db.shikimori.browser.client'
-            - '%anime_db.shikimori.host%'
-            - '%anime_db.shikimori.prefix%'
+        arguments: [ '@anime_db.shikimori.browser.client', ~, ~ ]
 
     anime_db.shikimori.browser.client:
         class: GuzzleHttp\Client
