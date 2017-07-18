@@ -81,6 +81,17 @@ class Browser
      *
      * @return array
      */
+    public function patch($resource, array $options = [])
+    {
+        return $this->request('PATCH', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
     public function delete($resource, array $options = [])
     {
         return $this->request('DELETE', $resource, $options);

@@ -77,6 +77,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 ['ignored' => true],
             ],
             [
+                'PATCH',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
                 'DELETE',
                 ['user' => 123],
                 ['ignored' => true],
@@ -106,6 +111,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             case 'PUT':
                 $this->browser->put('baz', $options);
                 break;
+            case 'PATCH':
+                $this->browser->patch('baz', $options);
+                break;
             case 'DELETE':
                 $this->browser->delete('baz', $options);
                 break;
@@ -134,6 +142,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             case 'PUT':
                 $this->browser->put('baz', $options);
                 break;
+            case 'PATCH':
+                $this->browser->patch('baz', $options);
+                break;
             case 'DELETE':
                 $this->browser->delete('baz', $options);
                 break;
@@ -160,6 +171,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 break;
             case 'PUT':
                 $this->assertEquals($data, $this->browser->put('baz', $options));
+                break;
+            case 'PATCH':
+                $this->assertEquals($data, $this->browser->patch('baz', $options));
                 break;
             case 'DELETE':
                 $this->assertEquals($data, $this->browser->delete('baz', $options));
