@@ -23,7 +23,7 @@ class Browser
     /**
      * @var string
      */
-    private $suffix;
+    private $prefix;
 
     /**
      * @var Client
@@ -33,25 +33,69 @@ class Browser
     /**
      * @param Client $client
      * @param string $host
-     * @param string $suffix
+     * @param string $prefix
      */
-    public function __construct(Client $client, $host, $suffix)
+    public function __construct(Client $client, $host, $prefix)
     {
         $this->client = $client;
         $this->host = $host;
-        $this->suffix = $suffix;
+        $this->prefix = $prefix;
     }
 
     /**
-     * Get data from path.
-     *
-     * @param string $path
+     * @param string $resource
+     * @param array  $options
      *
      * @return array
      */
-    public function get($path)
+    public function get($resource, array $options = [])
     {
-        $response = $this->client->request('GET', $this->host.$this->suffix.$path);
+        return $this->request('GET', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function post($resource, array $options = [])
+    {
+        return $this->request('POST', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function put($resource, array $options = [])
+    {
+        return $this->request('PUT', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function delete($resource, array $options = [])
+    {
+        return $this->request('DELETE', $resource, $options);
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @param array  $options
+     *
+     * @return array
+     */
+    private function request($method, $path = '', array $options = [])
+    {
+        $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
 
         if ($response->isError()) {
             throw ResponseException::failed($this->host);

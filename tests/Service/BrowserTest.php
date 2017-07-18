@@ -20,12 +20,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $host = 'bar';
+    private $host = 'foo';
 
     /**
      * @var string
      */
-    private $suffix = 'baz';
+    private $prefix = 'bar';
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
@@ -55,46 +55,132 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
-        $this->browser = new Browser($this->client, $this->host, $this->suffix);
+        $this->browser = new Browser($this->client, $this->host, $this->prefix);
+    }
+
+    public function requests()
+    {
+        return [
+            [
+                'GET',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'POST',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'PUT',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'DELETE',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+        ];
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
+     * @param array  $data
      */
-    public function testGetFailedTransport()
+    public function testGetFailedTransport($method, array $options, array $data)
     {
-        $this->buildDialogue('baz', true);
-        $this->browser->get('baz');
+        $this->buildDialogue($method, 'baz', true, $data, $options);
+
+        switch ($method) {
+            case 'GET':
+                $this->browser->get('baz', $options);
+                break;
+            case 'POST':
+                $this->browser->post('baz', $options);
+                break;
+            case 'PUT':
+                $this->browser->put('baz', $options);
+                break;
+            case 'DELETE':
+                $this->browser->delete('baz', $options);
+                break;
+        }
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
      */
-    public function testGetFailedResponseBody()
+    public function testGetFailedResponseBody($method, array $options)
     {
-        $this->buildDialogue('baz', false);
-        $this->browser->get('baz');
-    }
+        $this->buildDialogue($method, 'baz', false, [], $options);
 
-    public function testGet()
-    {
-        $data = ['test' => 123];
-        $this->buildDialogue('baz', false, $data);
-        $this->assertEquals($data, $this->browser->get('baz'));
+
+        switch ($method) {
+            case 'GET':
+                $this->browser->get('baz', $options);
+                break;
+            case 'POST':
+                $this->browser->post('baz', $options);
+                break;
+            case 'PUT':
+                $this->browser->put('baz', $options);
+                break;
+            case 'DELETE':
+                $this->browser->delete('baz', $options);
+                break;
+        }
     }
 
     /**
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
+     * @param array  $data
+     */
+    public function testGet($method, array $options, array $data)
+    {
+        $this->buildDialogue($method, 'baz', false, $data, $options);
+
+        switch ($method) {
+            case 'GET':
+                $this->assertEquals($data, $this->browser->get('baz', $options));
+                break;
+            case 'POST':
+                $this->assertEquals($data, $this->browser->post('baz', $options));
+                break;
+            case 'PUT':
+                $this->assertEquals($data, $this->browser->put('baz', $options));
+                break;
+            case 'DELETE':
+                $this->assertEquals($data, $this->browser->delete('baz', $options));
+                break;
+        }
+    }
+
+    /**
+     * @param string $method
      * @param string $path
-     * @param bool $is_error
-     * @param mixed $data
+     * @param bool   $is_error
+     * @param array  $data
+     * @param array  $options
      */
-    protected function buildDialogue($path, $is_error, $data = null)
+    protected function buildDialogue($method, $path, $is_error, array $data = [], array $options = [])
     {
         $body = $this->getMock(StreamInterface::class);
         $body
             ->expects($is_error ? $this->never() : $this->once())
             ->method('getContents')
-            ->will($this->returnValue($data ? json_encode($data) : $data))
+            ->will($this->returnValue($data ? json_encode($data) : null))
         ;
 
         $this->response
@@ -106,7 +192,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('request')
-            ->with('GET', $this->host.$this->suffix.$path)
+            ->with($method, $this->host.$this->prefix.$path, $options)
             ->will($this->returnValue($this->response))
         ;
 
