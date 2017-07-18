@@ -29,12 +29,7 @@ class Browser
     /**
      * @var string
      */
-    private $api_host;
-
-    /**
-     * @var string
-     */
-    private $api_prefix;
+    private $suffix;
 
     /**
      * @var Client
@@ -44,31 +39,13 @@ class Browser
     /**
      * @param Client $client
      * @param string $host
-     * @param string $api_host
-     * @param string $api_prefix
+     * @param string $suffix
      */
-    public function __construct(Client $client, $host, $api_host, $api_prefix)
+    public function __construct(Client $client, $host, $suffix)
     {
         $this->client = $client;
         $this->host = $host;
-        $this->api_host = $api_host;
-        $this->api_prefix = $api_prefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiHost()
-    {
-        return $this->api_host;
+        $this->suffix = $suffix;
     }
 
     /**
@@ -80,16 +57,16 @@ class Browser
      */
     public function get($path)
     {
-        $response = $this->client->request('GET', $this->api_host.$this->api_prefix.$path);
+        $response = $this->client->request('GET', $this->host.$this->suffix.$path);
 
         if ($response->isError()) {
-            throw ResponseException::failed($this->api_host);
+            throw ResponseException::failed($this->host);
         }
 
         $body = json_decode($response->getBody()->getContents(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw ResponseException::invalidResponse($this->api_host);
+            throw ResponseException::invalidResponse($this->host);
         }
 
         return $body;

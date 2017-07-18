@@ -20,27 +20,27 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $host = 'foo';
+    private $host = 'bar';
 
     /**
      * @var string
      */
-    private $api_host = 'bar';
-
-    /**
-     * @var string
-     */
-    private $api_prefix = 'baz';
-
-    /**
-     * @var Browser
-     */
-    private $browser;
+    private $suffix = 'baz';
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     private $client;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|Response
+     */
+    private $response;
+
+    /**
+     * @var Browser
+     */
+    private $browser;
 
     protected function setUp()
     {
@@ -49,18 +49,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+        $this->response = $this
+            ->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $this->browser = new Browser($this->client, $this->host, $this->api_host, $this->api_prefix);
-    }
-
-    public function testGetHost()
-    {
-        $this->assertEquals($this->host, $this->browser->getHost());
-    }
-
-    public function testGetApiHost()
-    {
-        $this->assertEquals($this->api_host, $this->browser->getApiHost());
+        $this->browser = new Browser($this->client, $this->host, $this->suffix);
     }
 
     /**
@@ -102,13 +97,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($data ? json_encode($data) : $data))
         ;
 
-        /* @var $response \PHPUnit_Framework_MockObject_MockObject|Response */
-        $response = $this
-            ->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $response
+        $this->response
             ->expects($this->once())
             ->method('isError')
             ->will($this->returnValue($is_error))
@@ -117,12 +106,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('request')
-            ->with('GET', $this->api_host.$this->api_prefix.$path)
-            ->will($this->returnValue($response))
+            ->with('GET', $this->host.$this->suffix.$path)
+            ->will($this->returnValue($this->response))
         ;
 
         if (!$is_error) {
-            $response
+            $this->response
                 ->expects($this->once())
                 ->method('getBody')
                 ->will($this->returnValue($body))
