@@ -13,13 +13,14 @@ namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception;
 class ResponseException extends \RuntimeException
 {
     /**
-     * @param string $host
+     * @param string     $host
+     * @param \Exception $previous
      *
      * @return ResponseException
      */
-    public static function failed($host)
+    public static function failed($host, \Exception $previous)
     {
-        return new self(sprintf('Failed to query the server "%s"', $host));
+        return new self(sprintf('Failed to query the server "%s"', $host), $previous->getCode(), $previous);
     }
 
     /**

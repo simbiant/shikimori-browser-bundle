@@ -106,10 +106,10 @@ class Browser
      */
     private function request($method, $path = '', array $options = [])
     {
-        $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
-
-        if ($response->isError()) {
-            throw ResponseException::failed($this->host);
+        try {
+            $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
+        } catch (\Exception $e) {
+            throw ResponseException::failed($this->host, $e);
         }
 
         $body = json_decode($response->getBody()->getContents(), true);

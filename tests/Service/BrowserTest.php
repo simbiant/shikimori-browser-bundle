@@ -196,17 +196,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($data ? json_encode($data) : null))
         ;
 
-        $this->response
-            ->expects($this->once())
-            ->method('isError')
-            ->will($this->returnValue($is_error))
-        ;
-
         $this->client
             ->expects($this->once())
             ->method('request')
             ->with($method, $this->host.$this->prefix.$path, $options)
-            ->will($this->returnValue($this->response))
+            ->will($is_error ? $this->throwException(new \Exception()) : $this->returnValue($this->response))
         ;
 
         if (!$is_error) {
