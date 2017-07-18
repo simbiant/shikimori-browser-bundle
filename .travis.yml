@@ -3,7 +3,7 @@ language: php
 sudo: false
 
 notifications:
-    email: dev@anime-db.org
+    email: deploy@anime-db.org
 
 branches:
   except:
