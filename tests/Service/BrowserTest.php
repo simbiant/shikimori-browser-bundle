@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -10,139 +11,204 @@
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\RequestInterface;
+use GuzzleHttp\Client;
 use Guzzle\Http\Message\Response;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
      */
-    protected $host = 'foo';
+    private $host = 'foo';
 
     /**
      * @var string
      */
-    protected $api_prefix = 'bar';
-
-    /**
-     * @var Browser
-     */
-    protected $browser;
+    private $prefix = 'bar';
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
-    protected $client;
+    private $client;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|Response
+     */
+    private $response;
+
+    /**
+     * @var Browser
+     */
+    private $browser;
 
     protected function setUp()
     {
         $this->client = $this
-            ->getMockBuilder('\Guzzle\Http\Client')
+            ->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
+        $this->response = $this
+            ->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
-        $this->browser = new Browser($this->client, $this->host, $this->api_prefix);
+        $this->browser = new Browser($this->client, $this->host, $this->prefix);
     }
 
-    public function testGetHost()
+    public function requests()
     {
-        $this->assertEquals($this->host, $this->browser->getHost());
-    }
-
-    public function testGetApiHost()
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('getBaseUrl')
-            ->will($this->returnValue('baz'));
-
-        $this->assertEquals('baz', $this->browser->getApiHost());
-    }
-
-    public function testSetTimeout()
-    {
-        $timeout = 123;
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('timeout', $timeout);
-
-        $this->assertEquals($this->browser, $this->browser->setTimeout($timeout));
-    }
-
-    public function testSetProxy()
-    {
-        $proxy = '127.0.0.1';
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('proxy', $proxy);
-
-        $this->assertEquals($this->browser, $this->browser->setProxy($proxy));
+        return [
+            [
+                'GET',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'POST',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'PUT',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'PATCH',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+            [
+                'DELETE',
+                ['user' => 123],
+                ['ignored' => true],
+            ],
+        ];
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
+     * @param array  $data
      */
-    public function testGetFailedTransport()
+    public function testGetFailedTransport($method, array $options, array $data)
     {
-        $this->buildDialogue('baz', true);
-        $this->browser->get('baz');
+        $this->buildDialogue($method, 'baz', true, $data, $options);
+
+        switch ($method) {
+            case 'GET':
+                $this->browser->get('baz', $options);
+                break;
+            case 'POST':
+                $this->browser->post('baz', $options);
+                break;
+            case 'PUT':
+                $this->browser->put('baz', $options);
+                break;
+            case 'PATCH':
+                $this->browser->patch('baz', $options);
+                break;
+            case 'DELETE':
+                $this->browser->delete('baz', $options);
+                break;
+        }
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
      */
-    public function testGetFailedResponseBody()
+    public function testGetFailedResponseBody($method, array $options)
     {
-        $this->buildDialogue('baz', false);
-        $this->browser->get('baz');
-    }
+        $this->buildDialogue($method, 'baz', false, [], $options);
 
-    public function testGet()
-    {
-        $data = ['test' => 123];
-        $this->buildDialogue('baz', false, $data);
-        $this->assertEquals($data, $this->browser->get('baz'));
+        switch ($method) {
+            case 'GET':
+                $this->browser->get('baz', $options);
+                break;
+            case 'POST':
+                $this->browser->post('baz', $options);
+                break;
+            case 'PUT':
+                $this->browser->put('baz', $options);
+                break;
+            case 'PATCH':
+                $this->browser->patch('baz', $options);
+                break;
+            case 'DELETE':
+                $this->browser->delete('baz', $options);
+                break;
+        }
     }
 
     /**
+     * @dataProvider requests
+     *
+     * @param string $method
+     * @param array  $options
+     * @param array  $data
+     */
+    public function testGet($method, array $options, array $data)
+    {
+        $this->buildDialogue($method, 'baz', false, $data, $options);
+
+        switch ($method) {
+            case 'GET':
+                $this->assertEquals($data, $this->browser->get('baz', $options));
+                break;
+            case 'POST':
+                $this->assertEquals($data, $this->browser->post('baz', $options));
+                break;
+            case 'PUT':
+                $this->assertEquals($data, $this->browser->put('baz', $options));
+                break;
+            case 'PATCH':
+                $this->assertEquals($data, $this->browser->patch('baz', $options));
+                break;
+            case 'DELETE':
+                $this->assertEquals($data, $this->browser->delete('baz', $options));
+                break;
+        }
+    }
+
+    /**
+     * @param string $method
      * @param string $path
-     * @param bool $is_error
-     * @param mixed $data
+     * @param bool   $is_error
+     * @param array  $data
+     * @param array  $options
      */
-    protected function buildDialogue($path, $is_error, $data = null)
+    protected function buildDialogue($method, $path, $is_error, array $data = [], array $options = [])
     {
-        /* @var $request \PHPUnit_Framework_MockObject_MockObject|RequestInterface */
-        $request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
-        /* @var $response \PHPUnit_Framework_MockObject_MockObject|Response */
-        $response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $body = $this->getMock(StreamInterface::class);
+        $body
+            ->expects($is_error ? $this->never() : $this->once())
+            ->method('getContents')
+            ->will($this->returnValue($data ? json_encode($data) : null))
+        ;
 
         $this->client
             ->expects($this->once())
-            ->method('get')
-            ->with($this->api_prefix.$path)
-            ->will($this->returnValue($request));
-        $request
-            ->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response));
-        $response
-            ->expects($this->once())
-            ->method('isError')
-            ->will($this->returnValue($is_error));
+            ->method('request')
+            ->with($method, $this->host.$this->prefix.$path, $options)
+            ->will($is_error ? $this->throwException(new \Exception()) : $this->returnValue($this->response))
+        ;
 
         if (!$is_error) {
-            $response
+            $this->response
                 ->expects($this->once())
                 ->method('getBody')
-                ->with(true)
-                ->will($this->returnValue($data ? json_encode($data) : $data));
+                ->will($this->returnValue($body))
+            ;
         }
     }
 }

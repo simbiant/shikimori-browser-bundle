@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -9,14 +10,9 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use Guzzle\Http\Client;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException;
+use GuzzleHttp\Client;
 
-/**
- * Browser.
- *
- * @see http://shikimori.org/
- * @see http://shikimori.org/api/doc
- */
 class Browser
 {
     /**
@@ -27,7 +23,7 @@ class Browser
     /**
      * @var string
      */
-    private $api_prefix;
+    private $prefix;
 
     /**
      * @var Client
@@ -37,73 +33,89 @@ class Browser
     /**
      * @param Client $client
      * @param string $host
-     * @param string $api_prefix
+     * @param string $prefix
      */
-    public function __construct(Client $client, $host, $api_prefix)
+    public function __construct(Client $client, $host, $prefix)
     {
         $this->client = $client;
         $this->host = $host;
-        $this->api_prefix = $api_prefix;
+        $this->prefix = $prefix;
     }
 
     /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiHost()
-    {
-        return $this->client->getBaseUrl();
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return Browser
-     */
-    public function setTimeout($timeout)
-    {
-        $this->client->setDefaultOption('timeout', $timeout);
-
-        return $this;
-    }
-
-    /**
-     * @param int $proxy
-     *
-     * @return Browser
-     */
-    public function setProxy($proxy)
-    {
-        $this->client->setDefaultOption('proxy', $proxy);
-
-        return $this;
-    }
-
-    /**
-     * Get data from path.
-     *
-     * @param string $path
+     * @param string $resource
+     * @param array  $options
      *
      * @return array
      */
-    public function get($path)
+    public function get($resource, array $options = [])
     {
-        $response = $this->client->get($this->api_prefix.$path)->send();
-        if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.$this->client->getBaseUrl());
+        return $this->request('GET', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function post($resource, array $options = [])
+    {
+        return $this->request('POST', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function put($resource, array $options = [])
+    {
+        return $this->request('PUT', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function patch($resource, array $options = [])
+    {
+        return $this->request('PATCH', $resource, $options);
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $options
+     *
+     * @return array
+     */
+    public function delete($resource, array $options = [])
+    {
+        return $this->request('DELETE', $resource, $options);
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @param array  $options
+     *
+     * @return array
+     */
+    private function request($method, $path = '', array $options = [])
+    {
+        try {
+            $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
+        } catch (\Exception $e) {
+            throw ResponseException::failed($this->host, $e);
         }
 
-        $body = json_decode($response->getBody(true), true);
+        $body = json_decode($response->getBody()->getContents(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw new \RuntimeException('Invalid response from the server '.$this->client->getBaseUrl());
+            throw ResponseException::invalidResponse($this->host);
         }
 
         return $body;
