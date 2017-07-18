@@ -12,7 +12,8 @@
 Shikimori.org API browser
 =========================
 
-## Installation
+Installation
+------------
 
 Pretty simple with [Composer](http://packagist.org), run:
 
@@ -20,6 +21,12 @@ Pretty simple with [Composer](http://packagist.org), run:
 composer anime-db/shikimori-browser-bundle
 ```
 
-## License
+API docs
+--------
+
+Read documentation here: http://shikimori.org/api/doc
+
+License
+-------
 
 This bundle is under the [MIT license](http://opensource.org/licenses/MIT). See the complete license in the file: LICENSE

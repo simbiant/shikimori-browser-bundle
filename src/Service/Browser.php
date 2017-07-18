@@ -13,12 +13,6 @@ namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException;
 use GuzzleHttp\Client;
 
-/**
- * Browser.
- *
- * @see http://shikimori.org/
- * @see http://shikimori.org/api/doc
- */
 class Browser
 {
     /**
