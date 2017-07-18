@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2014, Peter Gribanov
  * @license   http://opensource.org/licenses/MIT
  */
+
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
@@ -13,9 +14,6 @@ use Guzzle\Http\Client;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
 
-/**
- * Test browser.
- */
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**

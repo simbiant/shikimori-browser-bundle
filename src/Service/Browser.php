@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
 use Guzzle\Http\Client;
@@ -13,8 +14,8 @@ use Guzzle\Http\Client;
 /**
  * Browser.
  *
- * @link http://shikimori.org/
- * @link http://shikimori.org/api/doc
+ * @see http://shikimori.org/
+ * @see http://shikimori.org/api/doc
  */
 class Browser
 {
