@@ -43,7 +43,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $children = $tree->getChildren();
 
         $this->assertInternalType('array', $children);
-        $this->assertEquals(['host', 'prefix'], array_keys($children));
+        $this->assertEquals(['host', 'prefix', 'client'], array_keys($children));
 
         $this->assertInstanceOf(ScalarNode::class, $children['host']);
         $this->assertEquals('https://shikimori.org', $children['host']->getDefaultValue());
@@ -52,5 +52,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ScalarNode::class, $children['prefix']);
         $this->assertEquals('/api/', $children['prefix']->getDefaultValue());
         $this->assertFalse($children['prefix']->isRequired());
+
+        $this->assertInstanceOf(ScalarNode::class, $children['client']);
+        $this->assertTrue($children['client']->isRequired());
     }
 }

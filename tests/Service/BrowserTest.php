@@ -28,6 +28,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $prefix = 'bar';
 
     /**
+     * @var string
+     */
+    private $app_client = 'My Custom Bot 1.0';
+
+    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     private $client;
@@ -55,7 +60,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->getMock()
         ;
 
-        $this->browser = new Browser($this->client, $this->host, $this->prefix);
+        $this->browser = new Browser($this->client, $this->host, $this->prefix, $this->app_client);
     }
 
     public function requests()
@@ -63,27 +68,102 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'GET',
-                ['user' => 123],
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => $this->app_client,
+                    ],
+                ],
+                ['ignored' => true],
+            ],
+            [
+                'GET',
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => 'Override User Agent',
+                    ],
+                ],
                 ['ignored' => true],
             ],
             [
                 'POST',
-                ['user' => 123],
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => $this->app_client,
+                    ],
+                ],
+                ['ignored' => true],
+            ],
+            [
+                'POST',
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => 'Override User Agent',
+                    ],
+                ],
                 ['ignored' => true],
             ],
             [
                 'PUT',
-                ['user' => 123],
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => $this->app_client,
+                    ],
+                ],
+                ['ignored' => true],
+            ],
+            [
+                'PUT',
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => 'Override User Agent',
+                    ],
+                ],
                 ['ignored' => true],
             ],
             [
                 'PATCH',
-                ['user' => 123],
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => $this->app_client,
+                    ],
+                ],
+                ['ignored' => true],
+            ],
+            [
+                'PATCH',
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => 'Override User Agent',
+                    ],
+                ],
                 ['ignored' => true],
             ],
             [
                 'DELETE',
-                ['user' => 123],
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => $this->app_client,
+                    ],
+                ],
+                ['ignored' => true],
+            ],
+            [
+                'DELETE',
+                [
+                    'user' => 123,
+                    'headers' => [
+                        'User-Agent' => 'Override User Agent',
+                    ],
+                ],
                 ['ignored' => true],
             ],
         ];

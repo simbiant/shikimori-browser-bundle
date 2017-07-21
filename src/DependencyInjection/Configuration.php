@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
      * anime_db_shikimori_browser:
      *     host: 'https://shikimori.org'
      *     prefix: '/api/'
+     *     client: 'My Custom Bot 1.0'
      *
      * @return TreeBuilder
      */
@@ -38,6 +39,10 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('prefix')
                         ->cannotBeEmpty()
                         ->defaultValue('/api/')
+                    ->end()
+                    ->scalarNode('client')
+                        ->cannotBeEmpty()
+                        ->isRequired()
                     ->end()
                 ->end()
             ->end()

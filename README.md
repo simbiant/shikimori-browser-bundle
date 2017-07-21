@@ -35,6 +35,10 @@ anime_db_shikimori_browser:
     # Prefix for API resurces
     # As a default used '/api/'
     prefix: '/api/'
+
+    # HTTP User-Agent
+    # No default value
+    client: 'My Custom Bot 1.0'
 ```
 
 Usage

@@ -26,6 +26,11 @@ class Browser
     private $prefix;
 
     /**
+     * @var string
+     */
+    private $app_client;
+
+    /**
      * @var Client
      */
     private $client;
@@ -34,12 +39,14 @@ class Browser
      * @param Client $client
      * @param string $host
      * @param string $prefix
+     * @param string $app_client
      */
-    public function __construct(Client $client, $host, $prefix)
+    public function __construct(Client $client, $host, $prefix, $app_client)
     {
         $this->client = $client;
         $this->host = $host;
         $this->prefix = $prefix;
+        $this->app_client = $app_client;
     }
 
     /**
@@ -106,6 +113,11 @@ class Browser
      */
     private function request($method, $path = '', array $options = [])
     {
+        $options['headers'] = array_merge(
+            ['User-Agent' => $this->app_client],
+            isset($options['headers']) ? $options['headers'] : []
+        );
+
         try {
             $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
         } catch (\Exception $e) {
