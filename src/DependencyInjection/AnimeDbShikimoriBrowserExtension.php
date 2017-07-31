@@ -30,9 +30,9 @@ class AnimeDbShikimoriBrowserExtension extends Extension
 
         $container
             ->getDefinition('anime_db.shikimori.browser')
-            ->replaceArgument(1, $config['host'])
-            ->replaceArgument(2, $config['prefix'])
-            ->replaceArgument(3, $config['client'])
+            ->replaceArgument(2, $config['host'])
+            ->replaceArgument(3, $config['prefix'])
+            ->replaceArgument(4, $config['client'])
         ;
     }
 }

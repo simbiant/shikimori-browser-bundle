@@ -11,9 +11,9 @@
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
-use GuzzleHttp\Client;
-use Guzzle\Http\Message\Response;
-use Psr\Http\Message\StreamInterface;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\ErrorDetector;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\ResponseInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,14 +33,19 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $app_client = 'My Custom Bot 1.0';
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Client
+     * @var \PHPUnit_Framework_MockObject_MockObject|HttpClient
      */
     private $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Response
+     * @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface
      */
     private $response;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ErrorDetector
+     */
+    private $detector;
 
     /**
      * @var Browser
@@ -49,18 +54,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = $this
-            ->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $this->response = $this
-            ->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $this->client = $this->getMock(HttpClient::class);
+        $this->response = $this->getMock(ResponseInterface::class);
+        $this->detector = $this->getMock(ErrorDetector::class);
 
-        $this->browser = new Browser($this->client, $this->host, $this->prefix, $this->app_client);
+        $this->browser = new Browser($this->client, $this->detector, $this->host, $this->prefix, $this->app_client);
     }
 
     public function requests()
@@ -170,125 +168,46 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
      * @dataProvider requests
      *
      * @param string $method
      * @param array  $options
      * @param array  $data
      */
-    public function testGetFailedTransport($method, array $options, array $data)
+    public function testRequest($method, array $options, array $data)
     {
-        $this->buildDialogue($method, 'baz', true, $data, $options);
-
-        switch ($method) {
-            case 'GET':
-                $this->browser->get('baz', $options);
-                break;
-            case 'POST':
-                $this->browser->post('baz', $options);
-                break;
-            case 'PUT':
-                $this->browser->put('baz', $options);
-                break;
-            case 'PATCH':
-                $this->browser->patch('baz', $options);
-                break;
-            case 'DELETE':
-                $this->browser->delete('baz', $options);
-                break;
-        }
-    }
-
-    /**
-     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException
-     * @dataProvider requests
-     *
-     * @param string $method
-     * @param array  $options
-     */
-    public function testGetFailedResponseBody($method, array $options)
-    {
-        $this->buildDialogue($method, 'baz', false, [], $options);
-
-        switch ($method) {
-            case 'GET':
-                $this->browser->get('baz', $options);
-                break;
-            case 'POST':
-                $this->browser->post('baz', $options);
-                break;
-            case 'PUT':
-                $this->browser->put('baz', $options);
-                break;
-            case 'PATCH':
-                $this->browser->patch('baz', $options);
-                break;
-            case 'DELETE':
-                $this->browser->delete('baz', $options);
-                break;
-        }
-    }
-
-    /**
-     * @dataProvider requests
-     *
-     * @param string $method
-     * @param array  $options
-     * @param array  $data
-     */
-    public function testGet($method, array $options, array $data)
-    {
-        $this->buildDialogue($method, 'baz', false, $data, $options);
-
-        switch ($method) {
-            case 'GET':
-                $this->assertEquals($data, $this->browser->get('baz', $options));
-                break;
-            case 'POST':
-                $this->assertEquals($data, $this->browser->post('baz', $options));
-                break;
-            case 'PUT':
-                $this->assertEquals($data, $this->browser->put('baz', $options));
-                break;
-            case 'PATCH':
-                $this->assertEquals($data, $this->browser->patch('baz', $options));
-                break;
-            case 'DELETE':
-                $this->assertEquals($data, $this->browser->delete('baz', $options));
-                break;
-        }
-    }
-
-    /**
-     * @param string $method
-     * @param string $path
-     * @param bool   $is_error
-     * @param array  $data
-     * @param array  $options
-     */
-    protected function buildDialogue($method, $path, $is_error, array $data = [], array $options = [])
-    {
-        $body = $this->getMock(StreamInterface::class);
-        $body
-            ->expects($is_error ? $this->never() : $this->once())
-            ->method('getContents')
-            ->will($this->returnValue($data ? json_encode($data) : null))
-        ;
+        $path = 'baz';
 
         $this->client
             ->expects($this->once())
             ->method('request')
             ->with($method, $this->host.$this->prefix.$path, $options)
-            ->will($is_error ? $this->throwException(new \Exception()) : $this->returnValue($this->response))
+            ->will($this->returnValue($this->response))
         ;
 
-        if (!$is_error) {
-            $this->response
-                ->expects($this->once())
-                ->method('getBody')
-                ->will($this->returnValue($body))
-            ;
+        $this->detector
+            ->expects($this->once())
+            ->method('detect')
+            ->with($this->response)
+            ->will($this->returnValue($data))
+        ;
+
+        switch ($method) {
+            case 'GET':
+                $this->assertEquals($data, $this->browser->get($path, $options));
+                break;
+            case 'POST':
+                $this->assertEquals($data, $this->browser->post($path, $options));
+                break;
+            case 'PUT':
+                $this->assertEquals($data, $this->browser->put($path, $options));
+                break;
+            case 'PATCH':
+                $this->assertEquals($data, $this->browser->patch($path, $options));
+                break;
+            case 'DELETE':
+                $this->assertEquals($data, $this->browser->delete($path, $options));
+                break;
         }
     }
 }

@@ -46,6 +46,6 @@ class ErrorDetector
             );
         }
 
-        return $data;
+        return (array) $data;
     }
 }
