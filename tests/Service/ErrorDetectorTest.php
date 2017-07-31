@@ -102,11 +102,29 @@ class ErrorDetectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException
+     * @return array
      */
-    public function testResponseFailed()
+    public function errorResponses()
     {
-        $json = json_encode(['code' => 404]);
+        return [
+            [
+                ['code' => 404],
+            ],
+            [
+                ['code' => 500, 'message' => 'Some error message.'],
+            ],
+        ];
+    }
+
+    /**
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException
+     * @dataProvider errorResponses
+     *
+     * @param array $response
+     */
+    public function testResponseFailed(array $response)
+    {
+        $json = json_encode($response);
 
         $this->response
             ->expects($this->once())
