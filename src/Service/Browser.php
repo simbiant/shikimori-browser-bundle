@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ResponseException;
 use GuzzleHttp\Client;
 
 class Browser
@@ -114,7 +114,9 @@ class Browser
     private function request($method, $path = '', array $options = [])
     {
         $options['headers'] = array_merge(
-            ['User-Agent' => $this->app_client],
+            [
+                'User-Agent' => $this->app_client,
+            ],
             isset($options['headers']) ? $options['headers'] : []
         );
 

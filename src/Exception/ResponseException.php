@@ -8,7 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception;
+namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Exception;
 
 class ResponseException extends \RuntimeException
 {
