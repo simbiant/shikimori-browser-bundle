@@ -13,20 +13,28 @@ namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Exception;
 class ErrorException extends \RuntimeException
 {
     /**
-     * @param \Exception $previous
+     * @param string $massage
+     * @param int    $code
      *
      * @return ErrorException
      */
-    public static function failed(\Exception $previous)
+    public static function failed($massage, $code)
     {
-        return new self('Failed to query the server', $previous->getCode(), $previous);
+        if ($massage) {
+            return new self(sprintf('Server returned error "%s".', $massage), $code);
+        } else {
+            return new self('Server returned an error.', $code);
+        }
     }
 
     /**
+     * @param string $massage
+     * @param int    $code
+     *
      * @return ErrorException
      */
-    public static function invalidResponse()
+    public static function invalidResponse($massage, $code)
     {
-        return new self('Invalid response from the server');
+        return new self(sprintf('Failed to parse response due to "%s" error.', $massage), $code);
     }
 }
