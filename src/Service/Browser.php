@@ -10,11 +10,20 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Exception\ResponseException;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
 
 class Browser
 {
+    /**
+     * @var HttpClient
+     */
+    private $client;
+
+    /**
+     * @var ErrorDetector
+     */
+    private $detector;
+
     /**
      * @var string
      */
@@ -31,19 +40,16 @@ class Browser
     private $app_client;
 
     /**
-     * @var Client
+     * @param HttpClient    $client
+     * @param ErrorDetector $detector
+     * @param string        $host
+     * @param string        $prefix
+     * @param string        $app_client
      */
-    private $client;
-
-    /**
-     * @param Client $client
-     * @param string $host
-     * @param string $prefix
-     * @param string $app_client
-     */
-    public function __construct(Client $client, $host, $prefix, $app_client)
+    public function __construct(HttpClient $client, ErrorDetector $detector, $host, $prefix, $app_client)
     {
         $this->client = $client;
+        $this->detector = $detector;
         $this->host = $host;
         $this->prefix = $prefix;
         $this->app_client = $app_client;
@@ -114,22 +120,14 @@ class Browser
     private function request($method, $path = '', array $options = [])
     {
         $options['headers'] = array_merge(
-            ['User-Agent' => $this->app_client],
+            [
+                'User-Agent' => $this->app_client,
+            ],
             isset($options['headers']) ? $options['headers'] : []
         );
 
-        try {
-            $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
-        } catch (\Exception $e) {
-            throw ResponseException::failed($this->host, $e);
-        }
+        $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
 
-        $body = json_decode($response->getBody()->getContents(), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw ResponseException::invalidResponse($this->host);
-        }
-
-        return $body;
+        return $this->detector->detect($response);
     }
 }

@@ -1,8 +1,12 @@
 services:
     anime_db.shikimori.browser:
         class: AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser
-        arguments: [ '@anime_db.shikimori.browser.client', ~, ~, ~ ]
+        arguments: [ '@anime_db.shikimori.browser.client', '@anime_db.shikimori.browser.error_detector', ~, ~, ~ ]
 
     anime_db.shikimori.browser.client:
         class: GuzzleHttp\Client
+        public: false
+
+    anime_db.shikimori.browser.error_detector:
+        class: AnimeDb\Bundle\ShikimoriBrowserBundle\Service\ErrorDetector
         public: false

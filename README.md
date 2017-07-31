@@ -98,6 +98,22 @@ Destroy a message ([docs](https://shikimori.org/api/doc/1.0/messages/destroy))
 $browser->delete('messages/12');
 ```
 
+Catch exceptions
+
+```php
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\NotFoundException;
+
+try {
+    $content = $browser->get('animes/1');
+} catch (NotFoundException $e) {
+    // anime not found
+} catch (\Exception $e) {
+    // other exceptions
+}
+```
+
+You can customize request options. See [Guzzle Documentation](http://docs.guzzlephp.org/en/stable/request-options.html).
+
 License
 -------
 
