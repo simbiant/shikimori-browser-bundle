@@ -10,13 +10,13 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Exception;
 
-class ResponseException extends \RuntimeException
+class ErrorException extends \RuntimeException
 {
     /**
      * @param string     $host
      * @param \Exception $previous
      *
-     * @return ResponseException
+     * @return ErrorException
      */
     public static function failed($host, \Exception $previous)
     {
@@ -26,7 +26,7 @@ class ResponseException extends \RuntimeException
     /**
      * @param string $host
      *
-     * @return ResponseException
+     * @return ErrorException
      */
     public static function invalidResponse($host)
     {

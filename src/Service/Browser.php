@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
-use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ResponseException;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException;
 use GuzzleHttp\Client;
 
 class Browser
@@ -123,13 +123,13 @@ class Browser
         try {
             $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
         } catch (\Exception $e) {
-            throw ResponseException::failed($this->host, $e);
+            throw ErrorException::failed($this->host, $e);
         }
 
         $body = json_decode($response->getBody()->getContents(), true);
 
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($body)) {
-            throw ResponseException::invalidResponse($this->host);
+            throw ErrorException::invalidResponse($this->host);
         }
 
         return $body;
