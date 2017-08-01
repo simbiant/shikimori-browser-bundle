@@ -13,6 +13,7 @@ namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Tests\Service;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\ErrorDetector;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -243,6 +244,64 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ['PATCH'],
             ['DELETE'],
         ];
+    }
+
+    /**
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\NotFoundException
+     * @dataProvider methods
+     *
+     * @param string $method
+     */
+    public function testWrapNotFoundException($method)
+    {
+        $path = 'baz';
+
+        /* @var $exception \PHPUnit_Framework_MockObject_MockObject|ClientException */
+        $exception = $this
+            ->getMockBuilder(ClientException::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $exception
+            ->expects($this->once())
+            ->method('getResponse')
+            ->will($this->returnValue($this->response))
+        ;
+
+        $this->response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(404))
+        ;
+
+        $this->client
+            ->expects($this->once())
+            ->method('request')
+            ->with($method, $this->host.$this->prefix.$path, [
+                'headers' => [
+                    'User-Agent' => $this->app_client,
+                ],
+            ])
+            ->will($this->throwException($exception))
+        ;
+
+        switch ($method) {
+            case 'GET':
+                $this->browser->get($path);
+                break;
+            case 'POST':
+                $this->browser->post($path);
+                break;
+            case 'PUT':
+                $this->browser->put($path);
+                break;
+            case 'PATCH':
+                $this->browser->patch($path);
+                break;
+            case 'DELETE':
+                $this->browser->delete($path);
+                break;
+        }
     }
 
     /**
