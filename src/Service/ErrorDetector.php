@@ -11,24 +11,16 @@
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException;
-use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\NotFoundException;
-use Psr\Http\Message\ResponseInterface;
 
 class ErrorDetector
 {
     /**
-     * @param ResponseInterface $response
+     * @param string $content
      *
      * @return array
      */
-    public function detect(ResponseInterface $response)
+    public function detect($content)
     {
-        if ($response->getStatusCode() == 404) {
-            throw NotFoundException::page();
-        }
-
-        $content = $response->getBody()->getContents();
-
         if ($content == '') {
             return [];
         }

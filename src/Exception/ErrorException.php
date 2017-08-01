@@ -37,4 +37,14 @@ class ErrorException extends \RuntimeException
     {
         return new self(sprintf('Failed to parse response due to "%s" error.', $massage), $code);
     }
+
+    /**
+     * @param \Exception $e
+     *
+     * @return ErrorException
+     */
+    public static function wrap(\Exception $e)
+    {
+        return new self($e->getMessage(), $e->getCode(), $e);
+    }
 }

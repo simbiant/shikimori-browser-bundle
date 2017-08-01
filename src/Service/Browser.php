@@ -10,7 +10,10 @@
 
 namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Service;
 
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException;
+use AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\NotFoundException;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ClientException;
 
 class Browser
 {
@@ -126,8 +129,29 @@ class Browser
             isset($options['headers']) ? $options['headers'] : []
         );
 
-        $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
+        try {
+            $response = $this->client->request($method, $this->host.$this->prefix.$path, $options);
+        } catch (\Exception $e) {
+            throw $this->wrapException($e);
+        }
 
-        return $this->detector->detect($response);
+        $content = $response->getBody()->getContents();
+        $content = $this->detector->detect($content);
+
+        return $content;
+    }
+
+    /**
+     * @param \Exception $e
+     *
+     * @return ErrorException|NotFoundException
+     */
+    private function wrapException(\Exception $e)
+    {
+        if ($e instanceof ClientException && $e->getResponse()->getStatusCode() == 404) {
+            return NotFoundException::wrap($e);
+        }
+
+        return ErrorException::wrap($e);
     }
 }
