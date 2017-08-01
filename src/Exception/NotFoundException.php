@@ -19,4 +19,14 @@ class NotFoundException extends ErrorException
     {
         return new self('Page not found.');
     }
+
+    /**
+     * @param \Exception $e
+     *
+     * @return NotFoundException
+     */
+    public static function wrap(\Exception $e)
+    {
+        return new self($e->getMessage(), $e->getCode(), $e);
+    }
 }

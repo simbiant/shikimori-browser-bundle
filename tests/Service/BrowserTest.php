@@ -14,6 +14,7 @@ use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\ShikimoriBrowserBundle\Service\ErrorDetector;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,6 +44,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $response;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface
+     */
+    private $stream;
+
+    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ErrorDetector
      */
     private $detector;
@@ -56,6 +62,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->client = $this->getMock(HttpClient::class);
         $this->response = $this->getMock(ResponseInterface::class);
+        $this->stream = $this->getMock(StreamInterface::class);
         $this->detector = $this->getMock(ErrorDetector::class);
 
         $this->browser = new Browser($this->client, $this->detector, $this->host, $this->prefix, $this->app_client);
@@ -177,6 +184,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     public function testRequest($method, array $options, array $data)
     {
         $path = 'baz';
+        $content = json_encode($data);
 
         $this->client
             ->expects($this->once())
@@ -185,10 +193,22 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->response))
         ;
 
+        $this->response
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($this->stream))
+        ;
+
+        $this->stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($content))
+        ;
+
         $this->detector
             ->expects($this->once())
             ->method('detect')
-            ->with($this->response)
+            ->with($content)
             ->will($this->returnValue($data))
         ;
 
@@ -207,6 +227,60 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 break;
             case 'DELETE':
                 $this->assertEquals($data, $this->browser->delete($path, $options));
+                break;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function methods()
+    {
+        return [
+            ['GET'],
+            ['POST'],
+            ['PUT'],
+            ['PATCH'],
+            ['DELETE'],
+        ];
+    }
+
+    /**
+     * @expectedException \AnimeDb\Bundle\ShikimoriBrowserBundle\Exception\ErrorException
+     * @dataProvider methods
+     *
+     * @param string $method
+     */
+    public function testWrapException($method)
+    {
+        $path = 'baz';
+
+        $this->client
+            ->expects($this->once())
+            ->method('request')
+            ->with($method, $this->host.$this->prefix.$path, [
+                'headers' => [
+                    'User-Agent' => $this->app_client,
+                ],
+            ])
+            ->will($this->throwException(new \Exception()))
+        ;
+
+        switch ($method) {
+            case 'GET':
+                $this->browser->get($path);
+                break;
+            case 'POST':
+                $this->browser->post($path);
+                break;
+            case 'PUT':
+                $this->browser->put($path);
+                break;
+            case 'PATCH':
+                $this->browser->patch($path);
+                break;
+            case 'DELETE':
+                $this->browser->delete($path);
                 break;
         }
     }
