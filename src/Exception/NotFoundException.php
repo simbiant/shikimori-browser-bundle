@@ -13,14 +13,6 @@ namespace AnimeDb\Bundle\ShikimoriBrowserBundle\Exception;
 class NotFoundException extends ErrorException
 {
     /**
-     * @return NotFoundException
-     */
-    public static function page()
-    {
-        return new self('Page not found.');
-    }
-
-    /**
      * @param \Exception $e
      *
      * @return NotFoundException
